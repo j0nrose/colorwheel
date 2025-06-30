@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Wheel Studio</title>
+    <style>
+        /* CSS Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.5); }
+        }
+
+        .color-wheel-container {
+            position: relative;
+            margin: 2rem auto;
+            width: 300px;
+            height: 300px;
+        }
+
+        .color-wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                hsl(0, 100%, 50%),
+                hsl(30, 100%, 50%),
+                hsl(60, 100%, 50%),
+                hsl(90, 100%, 50%),
+                hsl(120, 100%, 50%),
+                hsl(150, 100%, 50%),
+                hsl(180, 100%, 50%),
+                hsl(210, 100%, 50%),
+                hsl(240, 100%, 50%),
+                hsl(270, 100%, 50%),
+                hsl(300, 100%, 50%),
+                hsl(330, 100%, 50%),
+                hsl(360, 100%, 50%)
+            );
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-wheel:hover {
+            transform: scale(1.05);
+        }
+
+        .color-pointer {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            border: 3px solid #333;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-pointer:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .color-info {
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .color-display {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .color-display:hover {
+            transform: translateY(-5px);
+        }
+
+        .color-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .color-preview:hover {
+            transform: scale(1.1);
+        }
+
+        .color-value {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .controls {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .palette {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .palette-color {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .palette-color:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .color-wheel-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .color-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Color Wheel Studio</h1>
+        
+        <div class="color-wheel-container">
+            <div class="color-wheel" id="colorWheel">
+                <div class="color-pointer" id="colorPointer"></div>
+            </div>
+        </div>
+
+        <div class="color-info">
+            <div class="color-display">
+                <div class="color-preview" id="colorPreview"></div>
+                <div class="color-value">Selected Color</div>
+                <div class="color-value" id="hexValue">#FF0000</div>
+            </div>
+            
+            <div class="color-display">
+                <div class="color-value">RGB Values</div>
+                <div class="color-value" id="rgbValue">rgb(255, 0, 0)</div>
+                <div class="color-value">HSL Values</div>
+                <div class="color-value" id="hslValue">hsl(0, 100%, 50%)</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="randomColor">Random Color</button>
+            <button class="btn" id="copyHex">Copy HEX</button>
+            <button class="btn" id="addToPalette">Add to Palette</button>
+        </div>
+
+        <div class="palette" id="colorPalette">
+            <!-- Palette colors will be added here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Code
+        class ColorWheel {
+            constructor() {
+                this.colorWheel = document.getElementById('colorWheel');
+                this.colorPointer = document.getElementById('colorPointer');
+                this.colorPreview = document.getElementById('colorPreview');
+                this.hexValue = document.getElementById('hexValue');
+                this.rgbValue = document.getElementById('rgbValue');
+                this.hslValue = document.getElementById('hslValue');
+                this.colorPalette = document.getElementById('colorPalette');
+                
+                this.isDragging = false;
+                this.currentHue = 0;
+                this.palette = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateColor(0); // Start with red
+            }
+
+            bindEvents() {
+                // Mouse events for color wheel
+                this.colorWheel.addEventListener('mousedown', this.handleMouseDown.bind(this));
+                document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+                document.addEventListener('mouseup', this.handleMouseUp.bind(this));
+                
+                // Touch events for mobile
+                this.colorWheel.addEventListener('touchstart', this.handleTouchStart.bind(this));
+                document.addEventListener('touchmove', this.handleTouchMove.bind(this));
+                document.addEventListener('touchend', this.handleMouseUp.bind(this));
+
+                // Button events
+                document.getElementById('randomColor').addEventListener('click', this.randomColor.bind(this));
+                document.getElementById('copyHex').addEventListener('click', this.copyHex.bind(this));
+                document.getElementById('addToPalette').addEventListener('click', this.addToPalette.bind(this));
+            }
+
+            handleMouseDown(e) {
+                this.isDragging = true;
+                this.updateColorFromEvent(e);
+            }
+
+            handleMouseMove(e) {
+                if (this.isDragging) {
+                    this.updateColorFromEvent(e);
+                }
+            }
+
+            handleMouseUp() {
+                this.isDragging = false;
+            }
+
+            handleTouchStart(e) {
+                e.preventDefault();
+                this.isDragging = true;
+                this.updateColorFromEvent(e.touches[0]);
+            }
+
+            handleTouchMove(e) {
+                e.preventDefault();
+                if (this.isDragging) {
+                    this.updateColorFromEvent(e.touches[0]);
+                }
+            }
+
+            updateColorFromEvent(e) {
+                const rect = this.colorWheel.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const x = e.clientX - centerX;
+                const y = e.clientY - centerY;
+                
+                let angle = Math.atan2(y, x) * (180 / Math.PI);
+                angle = (angle + 360) % 360;
+                
+                this.updateColor(angle);
+                this.updatePointerPosition(angle);
+            }
+
+            updateColor(hue) {
+                this.currentHue = hue;
+                const color = this.hslToRgb(hue, 100, 50);
+                const hex = this.rgbToHex(color.r, color.g, color.b);
+                
+                this.colorPreview.style.backgroundColor = hex;
+                this.hexValue.textContent = hex;
+                this.rgbValue.textContent = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                this.hslValue.textContent = `hsl(${Math.round(hue)}, 100%, 50%)`;
+            }
+
+            updatePointerPosition(angle) {
+                const radius = 130; // Adjust based on wheel size
+                const radian = (angle - 90) * (Math.PI / 180);
+                const x = Math.cos(radian) * radius;
+                const y = Math.sin(radian) * radius;
+                
+                this.colorPointer.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+            }
+
+            hslToRgb(h, s, l) {
+                h /= 360;
+                s /= 100;
+                l /= 100;
+                
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+                
+                let r, g, b;
+                
+                if (s === 0) {
+                    r = g = b = l;
+                } else {
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1/3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1/3);
+                }
+                
+                return {
+                    r: Math.round(r * 255),
+                    g: Math.round(g * 255),
+                    b: Math.round(b * 255)
+                };
+            }
+
+            rgbToHex(r, g, b) {
+                const toHex = (n) => {
+                    const hex = n.toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                };
+                return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+            }
+
+            randomColor() {
+                const randomHue = Math.random() * 360;
+                this.updateColor(randomHue);
+                this.updatePointerPosition(randomHue);
+            }
+
+            copyHex() {
+                navigator.clipboard.writeText(this.hexValue.textContent).then(() => {
+                    // Simple feedback - could be enhanced with a toast notification
+                    const btn = document.getElementById('copyHex');
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 1000);
+                });
+            }
+
+            addToPalette() {
+                const hex = this.hexValue.textContent;
+                if (!this.palette.includes(hex)) {
+                    this.palette.push(hex);
+                    this.renderPalette();
+                }
+            }
+
+            renderPalette() {
+                this.colorPalette.innerHTML = '';
+                this.palette.forEach((color, index) => {
+                    const colorDiv = document.createElement('div');
+                    colorDiv.className = 'palette-color';
+                    colorDiv.style.backgroundColor = color;
+                    colorDiv.title = color;
+                    colorDiv.addEventListener('click', () => {
+                        // Convert hex back to HSL to update the wheel
+                        const rgb = this.hexToRgb(color);
+                        const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                        this.updateColor(hsl.h);
+                        this.updatePointerPosition(hsl.h);
+                    });
+                    this.colorPalette.appendChild(colorDiv);
+                });
+            }
+
+            hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            }
+
+            rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                
+                if (max === min) {
+                    h = s = 0;
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+                
+                return { h: h * 360, s: s * 100, l: l * 100 };
+            }
+        }
+
+        // Initialize the color wheel when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ColorWheel();
+        });
+    </script>
+</body>
+</html>
